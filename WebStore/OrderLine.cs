@@ -15,6 +15,8 @@ namespace WebStore
 
         public int ProductId { get; set; }
 
+        public OrderLine() { }
+
         public OrderLine(int quantity, double price, int orderLineId, string productName, int productId)
         {
             this.Quantity = quantity;

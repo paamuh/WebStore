@@ -24,61 +24,47 @@ namespace WebStore
         {
 
         }
-        public Order(int customerId, string customerName, int orderLineId)
+        public Order(int customerId, string customerName)
         {
             this.OrderId = Interlocked.Increment(ref globalOrderId);
             this.CustomerId = customerId;
             this.CustomerName = customerName;
-            this.TotalPrice = 0;
-            //this.TotalPrice = CalculateOrderTotal(orderLineId);
-            
+            this.TotalPrice = 0; 
+            this.OrderLines = new List<OrderLine>();
+
+
+
         }
 
         public void addOrderLine(int quantity, double price, int orderLineId, string productName, int productId)
         {
-            List<OrderLine> orderLines = new List<OrderLine>();
+            
             OrderLine newOrderLine = new OrderLine(quantity, price,orderLineId, productName, productId);
 
-            OrderLines = orderLines;
-        }
 
+            OrderLines.Add(newOrderLine);
+
+            //Updates the totalprice for order everytime a new orderLine get added.
+            this.TotalPrice = CalculateOrderTotal(this.OrderId);
+            
+        }
 
 
 
 
         /*
+        
         public List<OrderLine> GetOrderLines()
         {
             List<OrderLine> orderLines = new List<OrderLine>();
 
             //Hardcode some orders
-            OrderLine mousePad = new OrderLine();
-            mousePad.Quantity = 1;
-            mousePad.Price = 99.99;
-            mousePad.OrderLineId = 1;
-            mousePad.ProductName = "Mousepad";
-            mousePad.ProductId = 1;
+            OrderLine mousePad = new OrderLine(1, 99.99, 1, "Mousepad", 1);
+            OrderLine monitor = new OrderLine(2, 2399.99,2, "Benq XL2410T", 2);
+            OrderLine keyboard = new OrderLine(1, 1299.99, 1, "Razer Chroma", 3);
 
             orderLines.Add(mousePad);
-
-            OrderLine monitor = new OrderLine();
-            monitor.Quantity = 2;
-            monitor.Price = 2399.99;
-            monitor.OrderLineId = 1;
-            monitor.ProductName = "Benq XL2410T";
-            monitor.ProductId = 2;
-
             orderLines.Add(monitor);
-
-            //second orderline
-
-            OrderLine keyboard = new OrderLine();
-            keyboard.Quantity = 10;
-            keyboard.Price = 499.99;
-            keyboard.OrderLineId = 2;
-            keyboard.ProductName = "Razer Chroma";
-            keyboard.ProductId = 3;
-
             orderLines.Add(keyboard);
 
             return orderLines;
@@ -102,16 +88,16 @@ namespace WebStore
 
 
         }
+        */
         
 
-        //Calculates total price of an order, needs to insert orderLineId to know wich
-        // orderlines this order contain.
-        public double CalculateOrderTotal(int orderLineId)
+        //Updates the total price of an order.
+        private double CalculateOrderTotal(int orderId)
         {
             double totalPrice = 0;
 
-            
-            List<OrderLine> orderLines = GetOrderLinesById(orderLineId);
+
+            List<OrderLine> orderLines = this.OrderLines;
 
             
 
@@ -123,6 +109,6 @@ namespace WebStore
             return totalPrice;
         }
 
-        */
+        
     }
 }
