@@ -133,6 +133,7 @@ namespace WebStore
             return totalPrice;
         }
 
+        
         public Dictionary<string, double> GetTopSellingProducts()
         {
             var topSellingProducts = new Dictionary<string, double>();
@@ -141,26 +142,53 @@ namespace WebStore
 
             
 
-
+            //Copies over all Orderlines from _orders
             foreach (var i in _orders)
                 foreach (var j in i.OrderLines)
                     copyOfAllOrderLines.Add(j);
 
-            var countSalesPerProduct =
-                from product in copyOfAllOrderLines
-                group product by product.ProductId into productGroup
-                select new
+            //Copies over all OrderLines from _posOrders
+            foreach(var i in _posOrders)
+                foreach (var j in i.Order.OrderLines)
+                    copyOfAllOrderLines.Add(j);
+
+           
+
+            var most = (from i in copyOfAllOrderLines
+                        group i by i into grp
+                        orderby grp.Count() descending
+                        select grp.Key);
+
+            
+            
+
+            //Check how much of the item is sold, adds 
+            foreach (var e in most)
+            {
+                int topsoldItemId = e.ProductId;
+                int soldItemsCounter = 0;
+                foreach (var k in copyOfAllOrderLines)
                 {
-                    Products = productGroup.Key,
-                    Count = productGroup.Count(),
-                };
+                    if (k.ProductId == topsoldItemId)
+                    {
+                        soldItemsCounter += k.Quantity;
+                    }
+                }
+                double totalRevenue = soldItemsCounter * e.Price;
+                topSellingProducts.Add(e.ProductName, totalRevenue);
+                Console.WriteLine(e.ProductId);
+            }
+            
+            
+
+            return topSellingProducts;
+
             //My plan was to find the top 5 most used items, count the times they are
             // in the list. Then count * price to get the total the product has sold.
             // Then add items with highest count on top with the total and return it as
             // a dictionary.
-            
-
-            return topSellingProducts;
         }
+        
+
     }
 }

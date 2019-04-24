@@ -14,13 +14,20 @@ namespace WebStore
 
             var order0 = orderController.AddOrder(1, "Thorbjørn");
             order0.addOrderLine(2, 199, 1, "PC", 1);
+            order0.addOrderLine(2, 100, 3, "Tv", 3);
+
+            var order1 = orderController.AddOrder(1, "Bjørn");
+            order0.addOrderLine(1, 199, 4, "PC", 1);
+            order0.addOrderLine(1, 100, 5, "Tv", 3);
 
             var posOrder0 = orderController.AddPosOrder(38, 2, "Per");
             posOrder0.Order.addOrderLine(3, 200, 2, "Flaske", 2);
             posOrder0.Order.addOrderLine(1, 199, 1, "PC", 1);
+            posOrder0.Order.addOrderLine(1, 100, 3, "Tv", 3);
 
             var posOrder1 = orderController.AddPosOrder(22, 3, "Håkon");
             posOrder1.Order.addOrderLine(1, 100, 3, "Tv", 3);
+            
 
             Console.WriteLine("Finds order by CustomerId and show the totalprice");
             List<Order> testGetOrderById = orderController.GetOrderByCustomerId(1);
@@ -38,6 +45,15 @@ namespace WebStore
             Console.WriteLine(order0.TotalPrice);
             Console.WriteLine(posOrder0.Order.TotalPrice);
             Console.WriteLine(posOrder1.Order.TotalPrice);
+
+            Console.WriteLine("************");
+            var topselling = orderController.GetTopSellingProducts();
+            Console.WriteLine("Top selling products : ");
+            foreach (var i in topselling)
+            {
+
+                Console.WriteLine("Productname : {0}, Totalrevenue = {1}", i.Key, i.Value);
+            }
 
             Console.ReadKey();
         }
