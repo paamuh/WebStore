@@ -153,14 +153,11 @@ namespace WebStore
                     copyOfAllOrderLines.Add(j);
 
            
-
+            //Here is the mistake. I want to order a list with the 5 most occuring object in descending order.
             var most = (from i in copyOfAllOrderLines
                         group i by i into grp
                         orderby grp.Count() descending
                         select grp.Key);
-
-            
-            
 
             //Check how much of the item is sold, adds 
             foreach (var e in most)
